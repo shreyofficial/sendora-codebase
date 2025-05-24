@@ -9,12 +9,15 @@ import {
   Mail,
   Users,
   TrendingUp,
-  Clock,
   Target,
   ArrowUpRight,
   ArrowDownRight,
   ChevronDown,
   Filter,
+  Eye,
+  Reply,
+  PhoneCall,
+  VoicemailIcon,
 } from "lucide-react"
 import Sidebar from "@/components/sidebar"
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
@@ -124,9 +127,9 @@ export default function Dashboard() {
                     <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                       <defs>
                         <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="hsl(var(--apple-blue))" stopOpacity={0.8} />
-                          <stop offset="50%" stopColor="hsl(var(--apple-blue))" stopOpacity={0.4} />
-                          <stop offset="100%" stopColor="hsl(var(--apple-blue))" stopOpacity={0.1} />
+                          <stop offset="0%" stopColor="#016AFF" stopOpacity={0.8} />
+                          <stop offset="50%" stopColor="#016AFF" stopOpacity={0.4} />
+                          <stop offset="100%" stopColor="#016AFF" stopOpacity={0.1} />
                         </linearGradient>
                       </defs>
                       <XAxis
@@ -156,49 +159,86 @@ export default function Dashboard() {
                         formatter={(value) => [`${value.toLocaleString()}`, "Prospects"]}
                         labelFormatter={(label) => `${label} 2025`}
                       />
-                      <Area
-                        type="monotone"
-                        dataKey="value"
-                        stroke="hsl(var(--apple-blue))"
-                        strokeWidth={2}
-                        fill="url(#colorValue)"
-                      />
+                      <Area type="monotone" dataKey="value" stroke="#016AFF" strokeWidth={2} fill="url(#colorValue)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              {/* Bottom Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <MetricCard
-                  title="Calls Made"
-                  value="1,284"
-                  change="+124"
-                  icon={<Phone className="w-5 h-5" />}
-                  variant="secondary"
-                />
-                <MetricCard
-                  title="Emails Sent"
-                  value="3,251"
-                  change="+465"
-                  icon={<Mail className="w-5 h-5" />}
-                  variant="secondary"
-                />
-                <MetricCard
-                  title="Appointments Booked"
-                  value="128"
-                  change="+12"
-                  icon={<Calendar className="w-5 h-5" />}
-                  variant="secondary"
-                />
-                <MetricCard
-                  title="Avg. Response Time"
-                  value="4.2h"
-                  change="-0.8h"
-                  isPositive={true}
-                  icon={<Clock className="w-5 h-5" />}
-                  variant="secondary"
-                />
+              {/* Call Analytics */}
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold mb-4">Call Analytics</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <MetricCard
+                    title="Calls Made"
+                    value="1,284"
+                    change="+124"
+                    icon={<Phone className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                  <MetricCard
+                    title="Picked Up"
+                    value="856"
+                    change="+78"
+                    isPositive={true}
+                    icon={<PhoneCall className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                  <MetricCard
+                    title="Appointments Booked"
+                    value="92"
+                    change="+8"
+                    isPositive={true}
+                    icon={<Calendar className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                  <MetricCard
+                    title="Voicemails"
+                    value="428"
+                    change="+46"
+                    isPositive={false}
+                    icon={<VoicemailIcon className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                </div>
+              </div>
+
+              {/* Email Analytics */}
+              <div>
+                <h2 className="text-lg font-semibold mb-4">Email Analytics</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <MetricCard
+                    title="Emails Sent"
+                    value="3,251"
+                    change="+465"
+                    icon={<Mail className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                  <MetricCard
+                    title="Opened"
+                    value="1,872"
+                    change="+215"
+                    isPositive={true}
+                    icon={<Eye className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                  <MetricCard
+                    title="Replied"
+                    value="643"
+                    change="+87"
+                    isPositive={true}
+                    icon={<Reply className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                  <MetricCard
+                    title="Appointments Booked"
+                    value="36"
+                    change="+4"
+                    isPositive={true}
+                    icon={<Calendar className="w-5 h-5" />}
+                    variant="secondary"
+                  />
+                </div>
               </div>
             </>
           ) : (
@@ -246,4 +286,3 @@ function MetricCard({ title, value, change, isPositive = true, icon, variant = "
     </div>
   )
 }
-

@@ -1,10 +1,25 @@
 "use client"
 
 import { useState } from "react"
-import { CreditCard, Mail, Edit2, Zap, Plus, ChevronRight, Clock, Download, Info } from "lucide-react"
+import { CreditCard, Zap, Plus, Clock, Download, Info } from "lucide-react"
+import PricingModal from "@/components/pricing-modal"
+import { useToast } from "@/components/ui/use-toast"
+import CreditsModal from "@/components/credits-modal"
 
 export default function BillingPage() {
-  const [selectedPlan, setSelectedPlan] = useState("pro")
+  const [selectedPlan, setSelectedPlan] = useState("Pro")
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false)
+  const { toast } = useToast()
+  const [isCreditsModalOpen, setIsCreditsModalOpen] = useState(false)
+
+  const handlePlanChange = (planType: string, planName: string) => {
+    setSelectedPlan(planName)
+    toast({
+      title: "Plan updated",
+      description: `You've successfully changed to the ${planName} ${planType} plan.`,
+      duration: 5000,
+    })
+  }
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -16,46 +31,22 @@ export default function BillingPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Left Column - Billing Info */}
         <div className="md:col-span-2 space-y-6">
-          {/* Billing Form */}
+          {/* Billing Management */}
           <div className="theme-card p-5">
-            <div className="space-y-5">
-              {/* Billing Email */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Billing Email</label>
-                <div className="flex">
-                  <div className="relative flex-1">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                    <input
-                      type="email"
-                      placeholder="Enter Your Email"
-                      className="w-full bg-background border border-input rounded-lg py-2 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                    />
-                  </div>
-                  <button className="ml-2 bg-secondary hover:bg-secondary/80 p-2 rounded-lg transition-colors">
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Payment Method */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Payment Method</label>
-                <div className="flex items-center justify-between bg-background border border-input rounded-lg p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-secondary p-2 rounded">
-                      <CreditCard className="w-4 h-4 text-muted-foreground" />
-                    </div>
-                    <div>
-                      <div className="text-sm">•••• •••• •••• 4242</div>
-                      <div className="text-xs text-muted-foreground">Expires 12/25</div>
-                    </div>
-                  </div>
-                  <button className="p-1.5 hover:bg-secondary rounded-md transition-colors">
-                    <Edit2 className="w-4 h-4 text-muted-foreground" />
-                  </button>
-                </div>
-              </div>
-            </div>
+            <h2 className="text-lg font-medium mb-4">Billing Information</h2>
+            <button
+              className="w-full py-2.5 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+              onClick={() =>
+                toast({
+                  title: "Redirecting to billing portal",
+                  description: "You'll be redirected to manage your billing information.",
+                  duration: 3000,
+                })
+              }
+            >
+              <CreditCard className="w-4 h-4" />
+              <span>Manage Billing Info</span>
+            </button>
           </div>
 
           {/* Billing History */}
@@ -91,21 +82,57 @@ export default function BillingPage() {
 
         {/* Right Column - Plan & Credits */}
         <div className="space-y-6">
-          {/* Current Plan */}
+          {/* Calls Usage */}
           <div className="theme-card p-5">
-            <h2 className="text-lg font-medium mb-4">Current Plan</h2>
+            <h2 className="text-lg font-medium mb-4">Calls Usage</h2>
 
             <div className="space-y-4">
-              <div className="inline-block px-2.5 py-1 bg-secondary rounded-full text-xs font-medium">Pro</div>
+              <div className="inline-block px-2.5 py-1 bg-secondary rounded-full text-xs font-medium">Pro Plan</div>
 
               <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">Monthly</div>
-                <div className="text-sm font-medium">$99/month</div>
+                <div className="text-sm text-muted-foreground">Monthly Limit</div>
+                <div className="text-sm font-medium">5,000 minutes</div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Used</div>
+                <div className="text-sm font-medium">1,250 minutes</div>
               </div>
 
               <div className="pt-3 border-t border-border">
-                <button className="w-full py-2 px-3 bg-secondary hover:bg-secondary/80 rounded-md text-sm font-medium transition-colors">
-                  Change Plan
+                <button
+                  className="w-full py-2 px-3 bg-secondary hover:bg-secondary/80 rounded-md text-sm font-medium transition-colors"
+                  onClick={() => setIsPricingModalOpen(true)}
+                >
+                  Upgrade Plan
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Emails Usage */}
+          <div className="theme-card p-5">
+            <h2 className="text-lg font-medium mb-4">Emails Usage</h2>
+
+            <div className="space-y-4">
+              <div className="inline-block px-2.5 py-1 bg-secondary rounded-full text-xs font-medium">Pro Plan</div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Monthly Limit</div>
+                <div className="text-sm font-medium">10,000 emails</div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Used</div>
+                <div className="text-sm font-medium">3,456 emails</div>
+              </div>
+
+              <div className="pt-3 border-t border-border">
+                <button
+                  className="w-full py-2 px-3 bg-secondary hover:bg-secondary/80 rounded-md text-sm font-medium transition-colors"
+                  onClick={() => setIsPricingModalOpen(true)}
+                >
+                  Upgrade Plan
                 </button>
               </div>
             </div>
@@ -134,14 +161,27 @@ export default function BillingPage() {
               </div>
             </div>
 
-            <button className="w-full py-2.5 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+            <button
+              onClick={() => setIsCreditsModalOpen(true)}
+              className="w-full py-2.5 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+            >
               <Plus className="w-4 h-4" />
               <span>Buy Credits</span>
             </button>
           </div>
         </div>
       </div>
+
+      {/* Pricing Modal */}
+      <PricingModal
+        isOpen={isPricingModalOpen}
+        onClose={() => setIsPricingModalOpen(false)}
+        currentPlan={selectedPlan}
+        onSelectPlan={handlePlanChange}
+      />
+
+      {/* Credits Modal */}
+      <CreditsModal isOpen={isCreditsModalOpen} onClose={() => setIsCreditsModalOpen(false)} />
     </div>
   )
 }
-

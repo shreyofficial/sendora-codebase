@@ -14,6 +14,8 @@ import {
   Key,
   Globe,
   Info,
+  HelpCircle,
+  User,
 } from "lucide-react"
 
 interface AddEmailAccountModalProps {
@@ -31,6 +33,8 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
   const [allowSelfSigned, setAllowSelfSigned] = useState(false)
   const [smtpTestStatus, setSmtpTestStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [imapTestStatus, setImapTestStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [emailQuality, setEmailQuality] = useState<"average" | "good" | "great">("average")
+  const [showQualityTooltip, setShowQualityTooltip] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   if (!isOpen) return null
@@ -57,6 +61,24 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
 
   const handleFileUploadClick = () => {
     fileInputRef.current?.click()
+  }
+
+  const getQualityTooltipText = () => {
+    return (
+      <div className="p-3 text-xs">
+        <p className="font-medium mb-1">Email Quality Levels:</p>
+        <div className="mb-2">
+          <span className="font-medium">Average:</span> New email or not warmed up yet.
+        </div>
+        <div className="mb-2">
+          <span className="font-medium">Good:</span> Email under three months old or in the process of warming up.
+        </div>
+        <div>
+          <span className="font-medium">Great:</span> Email older than three months and fully warmed up, ready for
+          outreach.
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -98,6 +120,47 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
         <div className="p-3">
           {activeTab === "smtp" && (
             <form className="space-y-4">
+              {/* Account Information */}
+              <div className="bg-background/50 backdrop-blur-md rounded-xl p-4 border border-border shadow-sm">
+                <div className="mb-3 flex items-center">
+                  <User className="w-4 h-4 text-foreground mr-2" />
+                  <h3 className="text-base font-semibold text-foreground">Account Information</h3>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label htmlFor="first-name" className="block text-xs font-medium text-foreground">
+                        First Name
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
+                        <input
+                          type="text"
+                          id="first-name"
+                          placeholder="First name"
+                          className="w-full bg-background border border-input rounded-lg py-1.5 pl-8 pr-2 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-transparent transition-all"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label htmlFor="last-name" className="block text-xs font-medium text-foreground">
+                        Last Name
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
+                        <input
+                          type="text"
+                          id="last-name"
+                          placeholder="Last name"
+                          className="w-full bg-background border border-input rounded-lg py-1.5 pl-8 pr-2 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-transparent transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* SMTP Configuration */}
               <div className="bg-background/50 backdrop-blur-md rounded-xl p-4 border border-border shadow-sm">
                 <div className="mb-3 flex items-center">
@@ -364,6 +427,68 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
                 </div>
               </div>
 
+              {/* Email Quality Section */}
+              <div className="bg-background/50 backdrop-blur-md rounded-xl p-4 border border-border shadow-sm">
+                <div className="mb-3 flex items-center">
+                  <Mail className="w-4 h-4 text-foreground mr-2" />
+                  <h3 className="text-base font-semibold text-foreground">Email Quality</h3>
+                  <div className="relative ml-1">
+                    <HelpCircle
+                      className="w-4 h-4 text-muted-foreground cursor-help"
+                      onMouseEnter={() => setShowQualityTooltip(true)}
+                      onMouseLeave={() => setShowQualityTooltip(false)}
+                    />
+                    {showQualityTooltip && (
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-popover text-popover-foreground rounded-md shadow-md z-50">
+                        {getQualityTooltipText()}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 bg-popover"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("average")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "average"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Average</span>
+                    <span className="text-xs text-muted-foreground mt-1">New email</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("good")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "good"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Good</span>
+                    <span className="text-xs text-muted-foreground mt-1">Warming up</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("great")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "great"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Great</span>
+                    <span className="text-xs text-muted-foreground mt-1">Fully warmed</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Help Text */}
               <div className="flex items-start gap-2 text-xs text-muted-foreground px-2">
                 <Info className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 mt-0.5" />
@@ -375,6 +500,14 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
                   for common email providers.
                 </p>
               </div>
+
+              {/* Connect Account Button */}
+              <button
+                type="button"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 px-4 rounded-lg text-sm font-medium transition-all shadow-sm mt-4"
+              >
+                Connect Account
+              </button>
             </form>
           )}
 
@@ -403,14 +536,14 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
                 </div>
               </div>
 
-              <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 px-4 rounded-lg text-sm font-medium transition-all shadow-sm">
-                Upload and Add Accounts
+              <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 px-4 rounded-lg text-sm font-medium transition-all shadow-sm">
+                Connect Account
               </button>
             </div>
           )}
 
           {activeTab === "google" && (
-            <div className="py-4 text-center">
+            <div className="py-4 text-center space-y-4">
               <h3 className="text-sm font-semibold text-foreground mb-3">Connect your Google Workspace account</h3>
               <div className="bg-background/50 backdrop-blur-md rounded-xl p-4 inline-block border border-border shadow-sm">
                 <button className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black py-2 px-6 rounded-lg text-sm font-medium transition-all shadow-sm">
@@ -435,11 +568,81 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
                   <span>Sign in with Google</span>
                 </button>
               </div>
+
+              {/* Email Quality Section for Google */}
+              <div className="bg-background/50 backdrop-blur-md rounded-xl p-4 border border-border shadow-sm mt-4">
+                <div className="mb-3 flex items-center">
+                  <Mail className="w-4 h-4 text-foreground mr-2" />
+                  <h3 className="text-base font-semibold text-foreground">Email Quality</h3>
+                  <div className="relative ml-1">
+                    <HelpCircle
+                      className="w-4 h-4 text-muted-foreground cursor-help"
+                      onMouseEnter={() => setShowQualityTooltip(true)}
+                      onMouseLeave={() => setShowQualityTooltip(false)}
+                    />
+                    {showQualityTooltip && (
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-popover text-popover-foreground rounded-md shadow-md z-50">
+                        {getQualityTooltipText()}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 bg-popover"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("average")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "average"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Average</span>
+                    <span className="text-xs text-muted-foreground mt-1">New email</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("good")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "good"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Good</span>
+                    <span className="text-xs text-muted-foreground mt-1">Warming up</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("great")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "great"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Great</span>
+                    <span className="text-xs text-muted-foreground mt-1">Fully warmed</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Connect Account Button */}
+              <button
+                type="button"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 px-4 rounded-lg text-sm font-medium transition-all shadow-sm mt-4"
+              >
+                Connect Account
+              </button>
             </div>
           )}
 
           {activeTab === "outlook" && (
-            <div className="py-4 text-center">
+            <div className="py-4 text-center space-y-4">
               <h3 className="text-sm font-semibold text-foreground mb-3">Connect your Outlook account</h3>
               <div className="bg-background/50 backdrop-blur-md rounded-xl p-4 inline-block border border-border shadow-sm">
                 <button className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black py-2 px-6 rounded-lg text-sm font-medium transition-all shadow-sm">
@@ -458,6 +661,68 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
                   <span>Sign in with Outlook</span>
                 </button>
               </div>
+
+              {/* Email Quality Section for Outlook */}
+              <div className="bg-background/50 backdrop-blur-md rounded-xl p-4 border border-border shadow-sm mt-4">
+                <div className="mb-3 flex items-center">
+                  <Mail className="w-4 h-4 text-foreground mr-2" />
+                  <h3 className="text-base font-semibold text-foreground">Email Quality</h3>
+                  <div className="relative ml-1">
+                    <HelpCircle
+                      className="w-4 h-4 text-muted-foreground cursor-help"
+                      onMouseEnter={() => setShowQualityTooltip(true)}
+                      onMouseLeave={() => setShowQualityTooltip(false)}
+                    />
+                    {showQualityTooltip && (
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-popover text-popover-foreground rounded-md shadow-md z-50">
+                        {getQualityTooltipText()}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 bg-popover"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("average")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "average"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Average</span>
+                    <span className="text-xs text-muted-foreground mt-1">New email</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("good")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "good"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Good</span>
+                    <span className="text-xs text-muted-foreground mt-1">Warming up</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEmailQuality("great")}
+                    className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                      emailQuality === "great"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-background/80"
+                    } transition-all`}
+                  >
+                    <span className="text-sm font-medium">Great</span>
+                    <span className="text-xs text-muted-foreground mt-1">Fully warmed</span>
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -465,4 +730,3 @@ export default function AddEmailAccountModal({ isOpen, onClose }: AddEmailAccoun
     </div>
   )
 }
-

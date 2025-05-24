@@ -1,5 +1,5 @@
 "use client"
-import { X, Moon, Sun, Monitor, Check } from "lucide-react"
+import { X, Moon, Sun, Check } from "lucide-react"
 import { useTheme } from "./theme-provider"
 
 interface ThemeSelectorModalProps {
@@ -51,7 +51,7 @@ export default function ThemeSelectorModal({ isOpen, onClose }: ThemeSelectorMod
                 <div className="text-xs text-muted-foreground">Light background with dark text</div>
               </div>
               {theme === "light" && (
-                <div className="w-5 h-5 rounded-full bg-[hsl(var(--apple-blue))] flex items-center justify-center">
+                <div className="w-5 h-5 rounded-full bg-[#016AFF] flex items-center justify-center">
                   <Check className="w-3 h-3 text-white" />
                 </div>
               )}
@@ -74,30 +74,7 @@ export default function ThemeSelectorModal({ isOpen, onClose }: ThemeSelectorMod
                 <div className="text-xs text-muted-foreground">Dark background with light text</div>
               </div>
               {theme === "dark" && (
-                <div className="w-5 h-5 rounded-full bg-[hsl(var(--apple-blue))] flex items-center justify-center">
-                  <Check className="w-3 h-3 text-white" />
-                </div>
-              )}
-            </button>
-
-            {/* System Theme Option */}
-            <button
-              onClick={() => setTheme("system")}
-              className={`flex items-center p-3 rounded-lg border ${
-                theme === "system"
-                  ? "border-[hsl(var(--apple-blue))] bg-[hsl(var(--apple-blue))]/5"
-                  : "border-border hover:bg-secondary/50"
-              } transition-all`}
-            >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[hsl(var(--apple-gray-100))] to-[hsl(var(--apple-gray-800))] flex items-center justify-center mr-3 border border-[hsl(var(--apple-gray-300))]">
-                <Monitor className="w-5 h-5 text-[hsl(var(--apple-gray-500))]" />
-              </div>
-              <div className="flex-1 text-left">
-                <div className="font-medium text-foreground">System</div>
-                <div className="text-xs text-muted-foreground">Matches your system theme preference</div>
-              </div>
-              {theme === "system" && (
-                <div className="w-5 h-5 rounded-full bg-[hsl(var(--apple-blue))] flex items-center justify-center">
+                <div className="w-5 h-5 rounded-full bg-[#016AFF] flex items-center justify-center">
                   <Check className="w-3 h-3 text-white" />
                 </div>
               )}
@@ -118,4 +95,3 @@ export default function ThemeSelectorModal({ isOpen, onClose }: ThemeSelectorMod
     </div>
   )
 }
-

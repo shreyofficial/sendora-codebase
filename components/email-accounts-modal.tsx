@@ -48,11 +48,12 @@ export default function EmailAccountsModal({
     onClose()
   }
 
+  // Update the getProviderIcon function to have better styling for light mode
   const getProviderIcon = (provider: string) => {
     switch (provider) {
       case "gmail":
         return (
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <svg viewBox="0 0 24 24" width="16" height="16">
               <path
                 fill="#EA4335"
@@ -75,7 +76,7 @@ export default function EmailAccountsModal({
         )
       case "outlook":
         return (
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <svg viewBox="0 0 24 24" width="16" height="16">
               <path d="M7 5H21V19H7V5Z" fill="#28A8EA" />
               <path d="M16.5 12L21 16.5V7.5L16.5 12Z" fill="#0078D4" />
@@ -92,8 +93,8 @@ export default function EmailAccountsModal({
         )
       default:
         return (
-          <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-            <Mail className="w-4 h-4 text-foreground" />
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm dark:bg-gray-700 dark:border-gray-700">
+            <Mail className="w-4 h-4 text-gray-400 dark:text-gray-400" />
           </div>
         )
     }
@@ -145,7 +146,7 @@ export default function EmailAccountsModal({
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm text-white transition-colors"
+            className="px-4 py-2 bg-[#635AFE] hover:bg-[#5048E5] rounded-lg text-sm text-white transition-colors"
           >
             Select {selected.length > 0 ? `(${selected.length})` : ""}
           </button>
@@ -154,4 +155,3 @@ export default function EmailAccountsModal({
     </ConfigModal>
   )
 }
-

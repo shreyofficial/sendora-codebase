@@ -68,8 +68,8 @@ export default function AIAgentReviewPage() {
           {/* Progress Steps */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-green-500 text-black flex items-center justify-center font-medium">
-                <Check className="w-4 h-4 text-black" />
+              <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-medium">
+                <Check className="w-4 h-4 text-white" />
               </div>
               <div className="ml-3">
                 <span className="text-sm font-medium">Basics</span>
@@ -77,8 +77,8 @@ export default function AIAgentReviewPage() {
             </div>
             <div className="w-16 h-0.5 bg-green-500"></div>
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-green-500 text-black flex items-center justify-center font-medium">
-                <Check className="w-4 h-4 text-black" />
+              <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-medium">
+                <Check className="w-4 h-4 text-white" />
               </div>
               <div className="ml-3">
                 <span className="text-sm font-medium">Configurations</span>
@@ -101,10 +101,12 @@ export default function AIAgentReviewPage() {
               <h2 className="text-xl font-semibold">Script Example</h2>
               <p className="text-sm text-muted-foreground">This is the script your AI will use in a campaign</p>
             </div>
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="bg-muted/50 border border-border rounded-xl overflow-hidden">
               <div className="p-6">
                 <div className="text-foreground whitespace-pre-line">
-                  {`Hi {{ name }}, I noticed you recently visited our website and showed interest in our AI solutions. I'd love to schedule a quick call to discuss how we can help your business leverage AI for better results. Would you be available for a 15-minute call this week? Best regards, AI Sales Agent`}
+                  Hi {{ name }}, I noticed you recently visited our website and showed interest in our AI solutions. I'd
+                  love to schedule a quick call to discuss how we can help your business leverage AI for better results.
+                  Would you be available for a 15-minute call this week? Best regards, AI Sales Agent
                 </div>
               </div>
             </div>
@@ -116,17 +118,13 @@ export default function AIAgentReviewPage() {
               <h2 className="text-xl font-semibold">Email Example</h2>
               <p className="text-sm text-muted-foreground">This is the email your AI will use in a campaign</p>
             </div>
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="bg-muted/50 border border-border rounded-xl overflow-hidden">
               <div className="p-6">
                 <div className="text-foreground whitespace-pre-line">
-                  {`Subject: Follow-up on our AI solutions
-
-Hi {{ name }}, I hope this email finds you well. I wanted to follow up on your interest in our AI solutions. Our platform can help you automate customer interactions, improve response times, and increase conversion rates.
-
-I'd be happy to provide more information or schedule a demo at your convenience.
-
-Best regards,
-AI Sales Agent`}
+                  Subject: Follow-up on our AI solutions Hi {{ name }}, I hope this email finds you well. I wanted to
+                  follow up on your interest in our AI solutions. Our platform can help you automate customer
+                  interactions, improve response times, and increase conversion rates. I'd be happy to provide more
+                  information or schedule a demo at your convenience. Best regards, AI Sales Agent
                 </div>
               </div>
             </div>
@@ -134,24 +132,24 @@ AI Sales Agent`}
         </div>
 
         {/* Right side - Configuration Panel */}
-        <div className="w-96 border-l border-border bg-card/50 p-6 overflow-auto">
+        <div className="w-96 border-l border-border bg-muted/30 p-6 overflow-auto">
           <h2 className="text-xl font-semibold mb-6">Agent Summary</h2>
 
           {/* Agent Basic Info */}
           <div className="bg-card border border-border rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
-                <Target className="w-5 h-5 text-muted-foreground" />
+              <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                <Target className="w-5 h-5 text-foreground" />
               </div>
               <div>
                 <h3 className="text-base font-medium mb-1">{agentData.name}</h3>
                 <p className="text-sm text-muted-foreground mb-2">{agentData.description}</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-600 dark:text-blue-400">
                     {agentData.type === "batch" ? "Scheduled" : "Real-Time"}
                   </span>
                   {agentData.knowledgeBase && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-foreground flex items-center gap-1">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground flex items-center gap-1">
                       <BookOpen className="w-3 h-3" />
                       {agentData.knowledgeBase}
                     </span>
@@ -169,7 +167,7 @@ AI Sales Agent`}
             <div className="bg-card border border-border rounded-lg p-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                  <Mic className="w-4 h-4 text-blue-400" />
+                  <Mic className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
                   <h4 className="text-sm font-medium">Voice</h4>
@@ -184,7 +182,7 @@ AI Sales Agent`}
             <div className="bg-card border border-border rounded-lg p-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  <Mail className="w-4 h-4 text-blue-400" />
+                  <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
                   <h4 className="text-sm font-medium">Email Accounts</h4>
@@ -197,7 +195,7 @@ AI Sales Agent`}
             <div className="bg-card border border-border rounded-lg p-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                  <Calendar className="w-4 h-4 text-green-400" />
+                  <Calendar className="w-4 h-4 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <h4 className="text-sm font-medium">Calendar</h4>
@@ -210,7 +208,7 @@ AI Sales Agent`}
             <div className="bg-card border border-border rounded-lg p-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-purple-400" />
+                  <Phone className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
                   <h4 className="text-sm font-medium">Phone Number</h4>
@@ -239,7 +237,7 @@ AI Sales Agent`}
           <div className="pt-4 mt-8 border-t border-border space-y-3">
             <Link
               href="/ai-agents/new/configuration"
-              className="block w-full py-2.5 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg text-sm transition-colors text-center"
+              className="block w-full py-2.5 bg-card hover:bg-card/80 text-foreground rounded-lg text-sm transition-colors text-center"
             >
               Back to Configuration
             </Link>
@@ -286,4 +284,3 @@ AI Sales Agent`}
     </div>
   )
 }
-

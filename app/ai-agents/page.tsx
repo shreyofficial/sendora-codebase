@@ -58,12 +58,10 @@ export default function AIAgentsPage() {
 
           {/* Filter Tabs */}
           <div className="flex mb-6 space-x-2">
-            <button className="px-4 py-1.5 bg-[hsl(var(--apple-blue))] rounded-md text-sm font-medium text-white">
-              All
-            </button>
+            <button className="px-4 py-1.5 bg-[#016AFF] rounded-md text-sm font-medium text-white">All</button>
             <button className="px-4 py-1.5 bg-secondary hover:bg-secondary/80 rounded-md text-sm font-medium text-secondary-foreground transition-colors">
               <div className="flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5" />
+                <Zap className="w-3.5 h-3.5 text-orange-500" />
                 <span>Real-Time</span>
               </div>
             </button>
@@ -90,7 +88,7 @@ export default function AIAgentsPage() {
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full ${
                             agent.type === "real-time"
-                              ? "bg-[hsl(var(--apple-blue))]/20 text-[hsl(var(--apple-blue))]"
+                              ? "bg-orange-500/10 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"
                               : "bg-[hsl(var(--apple-purple))]/20 text-[hsl(var(--apple-purple))]"
                           }`}
                         >
@@ -128,4 +126,3 @@ export default function AIAgentsPage() {
     </div>
   )
 }
-

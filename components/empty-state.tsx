@@ -20,4 +20,3 @@ export default function EmptyState({ icon, title, description, compact = false }
     </div>
   )
 }
-

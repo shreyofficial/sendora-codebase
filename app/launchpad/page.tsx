@@ -115,9 +115,9 @@ export default function Launchpad() {
                   onClick={() => activateStep(step)}
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-medium 
                     transition-all duration-300 ease-in-out transform
-                    ${step <= activeStep ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}
-                    ${step === activeStep ? "ring-2 ring-primary/50 scale-110" : "hover:scale-105"}
-                    focus:outline-none focus:ring-2 focus:ring-primary/50
+                    ${step <= activeStep ? "bg-[#016AFF] text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}
+                    ${step === activeStep ? "ring-2 ring-[#016AFF]/50 scale-110" : "hover:scale-105"}
+                    focus:outline-none focus:ring-2 focus:ring-[#016AFF]/50
                   `}
                   aria-label={`Go to step ${step}`}
                 >
@@ -255,9 +255,8 @@ export default function Launchpad() {
               </div>
               <button
                 onClick={handleContinue}
-                className={`flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground py-1.5 px-4 rounded text-[13px]
-                  transition-all duration-200 transform hover:translate-x-0.5
-                  focus:outline-none focus:ring-2 focus:ring-primary/50
+                className={`flex items-center gap-2 bg-[#016AFF] hover:bg-[#0055DD] text-white py-2.5 px-5 rounded-md transition-all shadow-[0_4px_10px_rgba(1,106,255,0.3)] hover:shadow-[0_6px_15px_rgba(1,106,255,0.4)]
+                  focus:outline-none focus:ring-2 focus:ring-[#016AFF]/50
                   ${activeStep >= 4 ? "opacity-50 cursor-not-allowed hover:translate-x-0" : "hover:shadow-md"}
                 `}
                 disabled={activeStep >= 4}
@@ -274,4 +273,3 @@ export default function Launchpad() {
     </div>
   )
 }
-

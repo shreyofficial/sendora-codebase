@@ -1,9 +1,17 @@
-import { Plus, Megaphone } from "lucide-react"
+"use client"
+
+import { Plus, MoreHorizontal, Target, Settings, Pause, Edit, Trash2 } from "lucide-react"
 import Sidebar from "@/components/sidebar"
-import EmptyState from "@/components/empty-state"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function Campaigns() {
+  const [showOptions, setShowOptions] = useState(false)
+
+  const toggleOptions = () => {
+    setShowOptions(!showOptions)
+  }
+
   return (
     <div className="flex h-screen bg-background text-foreground">
       {/* Sidebar */}
@@ -25,16 +33,65 @@ export default function Campaigns() {
           </div>
 
           {/* Content Area */}
-          <div className="theme-card p-6">
-            <EmptyState
-              icon={<Megaphone className="w-8 h-8" />}
-              title="No campaigns found"
-              description="You haven't created any campaigns yet. Create a campaign to start reaching out to your audience."
-            />
+          <div className="space-y-4">
+            {/* Dummy Campaign Card */}
+            <div className="theme-card p-6 rounded-lg border border-border hover:border-primary/50 transition-colors">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                    <Target className="w-6 h-6 text-gray-600" />
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-3">
+                      <h3 className="font-semibold text-lg">Sales Qualifier</h3>
+                      <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">Real-Time</span>
+                    </div>
+
+                    <p className="text-muted-foreground">Qualifies leads and schedules demos for sales team</p>
+
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground pt-2">
+                      <span>Sales Playbook</span>
+                      <span>2 campaigns</span>
+                      <span>Last used 2 hours ago</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <Settings className="w-5 h-5 text-gray-500" />
+                  </button>
+                  <div className="relative">
+                    <button onClick={toggleOptions} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                      <MoreHorizontal className="w-5 h-5 text-gray-500" />
+                    </button>
+
+                    {showOptions && (
+                      <div className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-10">
+                        <div className="py-1">
+                          <button className="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors">
+                            <Edit className="w-4 h-4 mr-2 text-muted-foreground" />
+                            Edit campaign
+                          </button>
+                          <button className="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors">
+                            <Pause className="w-4 h-4 mr-2 text-muted-foreground" />
+                            Pause campaign
+                          </button>
+                          <button className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-secondary transition-colors">
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete campaign
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
     </div>
   )
 }
-

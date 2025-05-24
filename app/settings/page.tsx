@@ -4,4 +4,3 @@ export default function SettingsPage() {
   // Redirect to the general settings page by default
   redirect("/settings/general")
 }
-

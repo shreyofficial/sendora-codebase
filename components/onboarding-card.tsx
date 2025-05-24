@@ -17,4 +17,3 @@ export default function OnboardingCard({ icon, title, description }: OnboardingC
     </div>
   )
 }
-

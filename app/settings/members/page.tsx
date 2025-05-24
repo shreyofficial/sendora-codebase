@@ -265,4 +265,3 @@ export default function MembersPage() {
     </div>
   )
 }
-

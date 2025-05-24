@@ -7,7 +7,6 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: ["class"],
   theme: {
     extend: {
       colors: {
@@ -44,30 +43,23 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+        orange: {
+          100: "#fff7ed",
+          400: "#fb923c",
+          500: "#f97316",
+          600: "#ea580c",
+          900: "#7c2d12",
         },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+        red: {
+          400: "#f87171",
+          500: "#ef4444",
+          600: "#dc2626",
+          900: "#7f1d1d",
         },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [], // Removed all plugins to avoid dependency issues
+  plugins: [],
 }
 
 export default config
-

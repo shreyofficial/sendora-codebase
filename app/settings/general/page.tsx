@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Settings, Globe, Bell, Lock, Moon, Sun, Monitor } from "lucide-react"
+import { Settings, Globe, Bell, Lock, Moon, Sun } from "lucide-react"
 import ThemeSelectorModal from "@/components/theme-selector-modal"
 import { useTheme } from "@/components/theme-provider"
 
@@ -16,7 +16,7 @@ export default function GeneralSettingsPage() {
       case "dark":
         return <Moon className="w-4 h-4 text-[hsl(var(--apple-blue))]" />
       default:
-        return <Monitor className="w-4 h-4 text-[hsl(var(--apple-gray-500))]" />
+        return <Sun className="w-4 h-4 text-[hsl(var(--apple-yellow))]" />
     }
   }
 
@@ -27,7 +27,7 @@ export default function GeneralSettingsPage() {
       case "dark":
         return "Dark"
       default:
-        return "System"
+        return "Light"
     }
   }
 
@@ -185,4 +185,3 @@ export default function GeneralSettingsPage() {
     </div>
   )
 }
-

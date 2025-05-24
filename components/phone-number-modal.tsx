@@ -134,7 +134,7 @@ export default function PhoneNumberModal({ isOpen, onClose, onSelect, selectedNu
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm text-white transition-colors"
+            className="px-4 py-2 bg-[#635AFE] hover:bg-[#5048E5] rounded-lg text-sm text-white transition-colors"
           >
             Select {selected.length > 0 ? `(${selected.length})` : ""}
           </button>
@@ -143,4 +143,3 @@ export default function PhoneNumberModal({ isOpen, onClose, onSelect, selectedNu
     </ConfigModal>
   )
 }
-

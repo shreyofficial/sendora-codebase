@@ -1,30 +1,91 @@
-# sendora-bubble UI
+# Sendora Dashboard
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+Sendora is an AI-powered sales automation platform that helps businesses streamline their sales processes and increase conversion rates.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/onittindwani-tryblackvolus-projects/v0-sendora-bubble-ui)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/f5nXnIgImd3)
+## Getting Started
 
-## Overview
+### Prerequisites
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+- Node.js 18.x or higher
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   \`\`\`bash
+   git clone https://github.com/your-username/sendora-dashboard.git
+   cd sendora-dashboard
+   \`\`\`
+
+2. Install dependencies:
+   \`\`\`bash
+   npm install
+   # or
+   yarn
+   \`\`\`
+
+3. Copy the example environment file:
+   \`\`\`bash
+   cp .env.example .env.local
+   \`\`\`
+
+4. Update the environment variables in `.env.local` with your own values.
+
+5. Start the development server:
+   \`\`\`bash
+   npm run dev
+   # or
+   yarn dev
+   \`\`\`
+
+6. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Features
+
+- AI-powered sales automation
+- Campaign management
+- Sales pipeline tracking
+- Email and phone integration
+- Knowledge base management
+- Team collaboration
+- Detailed analytics
 
 ## Deployment
 
-Your project is live at:
+The application is optimized for deployment on Vercel:
 
-**[https://vercel.com/onittindwani-tryblackvolus-projects/v0-sendora-bubble-ui](https://vercel.com/onittindwani-tryblackvolus-projects/v0-sendora-bubble-ui)**
+\`\`\`bash
+npm run build
+# or
+yarn build
+\`\`\`
 
-## Build your app
+## License
 
-Continue building your app on:
+This project is licensed under the MIT License - see the LICENSE file for details.
+\`\`\`
 
-**[https://v0.dev/chat/projects/f5nXnIgImd3](https://v0.dev/chat/projects/f5nXnIgImd3)**
+Let's create a LICENSE file:
 
-## How It Works
+```txt file="LICENSE"
+MIT License
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Copyright (c) 2023 Sendora
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

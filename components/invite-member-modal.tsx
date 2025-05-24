@@ -138,7 +138,7 @@ export default function InviteMemberModal({ isOpen, onClose, subAccounts = [] }:
               disabled={!email || (role === "user" && !selectedSubAccount) || isSubmitting || !validateEmail(email)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 email && validateEmail(email) && (role === "admin" || selectedSubAccount) && !isSubmitting
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
+                  ? "bg-[#016AFF] text-primary-foreground hover:bg-[#0055DD] shadow-lg"
                   : "bg-secondary/50 text-muted-foreground cursor-not-allowed"
               }`}
             >
@@ -179,4 +179,3 @@ export default function InviteMemberModal({ isOpen, onClose, subAccounts = [] }:
     </div>
   )
 }
-

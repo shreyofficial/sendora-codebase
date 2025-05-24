@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import {
   Rocket,
   BarChart3,
@@ -9,108 +11,130 @@ import {
   Mail,
   Phone,
   BookOpen,
-  Settings,
-  Zap,
-  ChevronUp,
-  ChevronDown,
+  Calendar,
+  ChevronRight,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useTheme } from "next-themes"
 
+// Import the settings popup component
+import { SettingsPopup } from "./settings-popup"
+import { useRef, useState, useEffect } from "react"
+import { SubaccountDropdown } from "./subaccount-dropdown"
+import { CompanyLogo } from "./company-logo"
+
+// Update the Sidebar component to include the settings popup
 export default function Sidebar() {
   const pathname = usePathname()
+  const { theme } = useTheme()
+  const isDark = theme === "dark"
+  const [isSettingsPopupOpen, setIsSettingsPopupOpen] = useState(false)
+  const profileButtonRef = useRef<HTMLButtonElement>(null)
+
+  // Close settings popup when pathname changes (navigation occurs)
+  useEffect(() => {
+    setIsSettingsPopupOpen(false)
+  }, [pathname])
+
+  // Handle escape key to close popup
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (isSettingsPopupOpen) setIsSettingsPopupOpen(false)
+      }
+    }
+
+    document.addEventListener("keydown", handleEscKey)
+    return () => document.removeEventListener("keydown", handleEscKey)
+  }, [isSettingsPopupOpen])
 
   return (
     <div className="w-56 h-full bg-[hsl(var(--sidebar-bg))] border-r border-[hsl(var(--sidebar-border))] flex flex-col">
       {/* Logo */}
       <div className="p-4 flex items-center">
-        <div className="w-7 h-7 mr-2 bg-primary rounded-full flex items-center justify-center">
-          <svg
-            viewBox="0 0 24 24"
-            width="14"
-            height="14"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-primary-foreground"
-          >
-            <path d="M18 6L6 18M6 6l12 12" />
-          </svg>
-        </div>
+        <CompanyLogo name="Sendora" className="mr-2" />
         <span className="text-lg font-bold text-foreground">Sendora</span>
       </div>
 
       {/* Organization Selector */}
       <div className="px-3 py-2 mb-3">
-        <button className="w-full flex items-center justify-between p-2 bg-secondary rounded-md">
-          <span className="text-sm text-foreground">Blackvolution</span>
-          <div className="flex flex-col">
-            <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" />
-            <ChevronDown className="w-3.5 h-3.5 text-muted-foreground -mt-1" />
-          </div>
-        </button>
+        <SubaccountDropdown />
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto px-2">
         {/* Main Section */}
-        <div className="px-3 mb-3">
-          <p className="text-xs text-muted-foreground mb-1.5 px-2">MAIN</p>
-          <nav>
-            <NavItem href="/launchpad" icon={<Rocket />} label="Launchpad" active={pathname === "/launchpad"} />
-            <NavItem href="/dashboard" icon={<BarChart3 />} label="Dashboard" active={pathname === "/dashboard"} />
-            <NavItem
+        <div className="mb-4">
+          <p className="text-xs text-muted-foreground mb-1.5 px-3">MAIN</p>
+          <nav className="space-y-1">
+            <SidebarNavItem
+              href="/launchpad"
+              icon={<Rocket className="w-4 h-4" />}
+              label="Launchpad"
+              active={pathname === "/launchpad"}
+            />
+            <SidebarNavItem
+              href="/dashboard"
+              icon={<BarChart3 className="w-4 h-4" />}
+              label="Dashboard"
+              active={pathname === "/dashboard"}
+            />
+            <SidebarNavItem
+              href="/campaigns"
+              icon={<Calendar className="w-4 h-4" />}
+              label="Campaigns"
+              active={pathname === "/campaigns" || pathname.startsWith("/campaigns/")}
+            />
+            <SidebarNavItem
               href="/ai-agents"
-              icon={<Target />}
+              icon={<Target className="w-4 h-4" />}
               label="AI Agents"
               active={pathname === "/ai-agents" || pathname.startsWith("/ai-agents/")}
-              className="z-10 relative"
             />
           </nav>
         </div>
 
         {/* Sales Section */}
-        <div className="px-3 mb-3">
-          <p className="text-xs text-muted-foreground mb-1.5 px-2">SALES</p>
-          <nav>
-            <NavItem
+        <div className="mb-4">
+          <p className="text-xs text-muted-foreground mb-1.5 px-3">SALES</p>
+          <nav className="space-y-1">
+            <SidebarNavItem
               href="/sales-pipeline"
-              icon={<PieChart />}
+              icon={<PieChart className="w-4 h-4" />}
               label="Sales Pipeline"
-              active={pathname === "/sales-pipeline"}
+              active={pathname === "/sales-pipeline" || pathname.startsWith("/sales-pipeline/")}
             />
-            <NavItem
+            <SidebarNavItem
               href="/conversations"
-              icon={<MessageSquare />}
+              icon={<MessageSquare className="w-4 h-4" />}
               label="Conversations"
               active={pathname === "/conversations"}
             />
           </nav>
         </div>
 
-        {/* Connect Section */}
-        <div className="px-3 mb-3">
-          <p className="text-xs text-muted-foreground mb-1.5 px-2">CONNECT</p>
-          <nav>
-            <NavItem
+        {/* Resources Section (renamed from Connect) */}
+        <div className="mb-4">
+          <p className="text-xs text-muted-foreground mb-1.5 px-3">RESOURCES</p>
+          <nav className="space-y-1">
+            <SidebarNavItem
+              href="/knowledge-base"
+              icon={<BookOpen className="w-4 h-4" />}
+              label="Knowledge Base"
+              active={pathname === "/knowledge-base"}
+            />
+            <SidebarNavItem
               href="/email-accounts"
-              icon={<Mail />}
+              icon={<Mail className="w-4 h-4" />}
               label="Email Accounts"
               active={pathname === "/email-accounts"}
             />
-            <NavItem
+            <SidebarNavItem
               href="/phone-numbers"
-              icon={<Phone />}
+              icon={<Phone className="w-4 h-4" />}
               label="Phone Numbers"
               active={pathname === "/phone-numbers"}
-            />
-            <NavItem
-              href="/knowledge-base"
-              icon={<BookOpen />}
-              label="Knowledge Base"
-              active={pathname === "/knowledge-base"}
             />
           </nav>
         </div>
@@ -118,35 +142,87 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="p-3 border-t border-[hsl(var(--sidebar-border))]">
-        <div className="mb-3">
-          <button className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 py-1.5 px-3 rounded-md text-sm">
-            <Zap className="w-4 h-4" />
-            <span>0 Credit</span>
+        <div className="flex gap-2 mb-3">
+          {/* Email Credits */}
+          <div className={`flex-1 rounded-md ${isDark ? "bg-gray-800" : "bg-gray-100"}`}>
+            <div className="flex items-center justify-between px-3 py-2">
+              <Mail className={`w-4 h-4 ${isDark ? "text-gray-300" : "text-gray-600"}`} />
+              <span className={`text-sm font-bold ${isDark ? "text-white" : "text-gray-900"}`}>0</span>
+            </div>
+          </div>
+
+          {/* Call Credits */}
+          <div className={`flex-1 rounded-md ${isDark ? "bg-gray-800" : "bg-gray-100"}`}>
+            <div className="flex items-center justify-between px-3 py-2">
+              <Phone className={`w-4 h-4 ${isDark ? "text-gray-300" : "text-gray-600"}`} />
+              <span className={`text-sm font-bold ${isDark ? "text-white" : "text-gray-900"}`}>0</span>
+            </div>
+          </div>
+        </div>
+
+        {/* User Profile Section - Replaces Settings Button */}
+        <div className="px-2">
+          <button
+            ref={profileButtonRef}
+            onClick={(e) => {
+              e.stopPropagation() // Prevent event bubbling
+              setIsSettingsPopupOpen(!isSettingsPopupOpen)
+            }}
+            className="w-full flex items-center gap-3 p-2 rounded-md transition-all hover:bg-[hsl(var(--sidebar-hover-bg))]"
+            aria-haspopup="true"
+            aria-expanded={isSettingsPopupOpen}
+          >
+            {/* User Avatar */}
+            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+              <span className="text-sm font-bold">AJ</span>
+            </div>
+
+            {/* User Info */}
+            <div className="flex-1 overflow-hidden text-left">
+              <p className="text-sm font-medium text-foreground truncate">Aaroh Jain</p>
+              <p className="text-xs text-muted-foreground truncate">aarohjain06@gmail.com</p>
+            </div>
+
+            {/* Indicator - Fixed direction */}
+            <ChevronRight
+              className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isSettingsPopupOpen ? "rotate-180" : ""}`}
+            />
           </button>
         </div>
-        <nav>
-          <NavItem href="/settings" icon={<Settings />} label="Settings" active={pathname.startsWith("/settings")} />
-        </nav>
       </div>
+
+      {/* Settings Popup */}
+      <SettingsPopup
+        isOpen={isSettingsPopupOpen}
+        onClose={() => setIsSettingsPopupOpen(false)}
+        anchorRef={profileButtonRef}
+      />
     </div>
   )
 }
 
-function NavItem({ href, icon, label, active = false, className = "" }) {
+interface SidebarNavItemProps {
+  href: string
+  icon: React.ReactNode
+  label: string
+  active?: boolean
+}
+
+function SidebarNavItem({ href, icon, label, active = false }: SidebarNavItemProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center gap-2.5 px-2 py-1.5 rounded-md mb-1 text-sm 
-    ${
-      active
-        ? "bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-fg))]"
-        : "text-[hsl(var(--sidebar-fg))] hover:bg-[hsl(var(--sidebar-hover-bg))]"
-    } 
-    ${className}`}
+      className={`flex items-center justify-between px-3 py-2 rounded-md transition-all ${
+        active
+          ? "bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-fg))]"
+          : "text-muted-foreground hover:bg-[hsl(var(--sidebar-hover-bg))] hover:text-foreground"
+      }`}
     >
-      <span className={active ? "text-[hsl(var(--sidebar-active-fg))]" : "text-[hsl(var(--sidebar-fg))]"}>{icon}</span>
-      <span>{label}</span>
+      <div className="flex items-center gap-2.5">
+        <span className={active ? "text-[hsl(var(--sidebar-active-fg))]" : "text-muted-foreground"}>{icon}</span>
+        <span className="text-sm">{label}</span>
+      </div>
+      {active && <ChevronRight className="w-3.5 h-3.5 text-[hsl(var(--sidebar-active-fg))]" />}
     </Link>
   )
 }
-

@@ -22,7 +22,7 @@ export default function EmptyDashboard({ onGetStarted }: EmptyDashboardProps) {
 
       <button
         onClick={onGetStarted}
-        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 px-5 rounded-lg text-sm font-medium transition-colors mb-16"
+        className="flex items-center gap-2 bg-[#635AFE] hover:bg-[#5048E5] text-white py-2.5 px-5 rounded-lg text-sm font-medium transition-colors mb-16 shadow-sm"
       >
         <span>Get Started</span>
         <ArrowRight className="w-4 h-4" />
@@ -75,4 +75,3 @@ function StepCard({ number, title, description, icon }: StepCardProps) {
     </div>
   )
 }
-

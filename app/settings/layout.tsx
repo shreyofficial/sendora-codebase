@@ -4,7 +4,7 @@ import type React from "react"
 
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Settings, Users, CreditCard, Palette, HelpCircle, ChevronRight } from "lucide-react"
+import { ArrowLeft, Settings, Users, CreditCard, Palette, HelpCircle, ChevronRight, Key } from "lucide-react"
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -29,6 +29,12 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
               icon={<Settings className="w-4 h-4" />}
               label="General Settings"
               active={pathname === "/settings/general"}
+            />
+            <SettingsNavItem
+              href="/settings/api-keys"
+              icon={<Key className="w-4 h-4" />}
+              label="API Keys"
+              active={pathname === "/settings/api-keys"}
             />
             <SettingsNavItem
               href="/settings/members"
@@ -76,15 +82,16 @@ function SettingsNavItem({ href, icon, label, active = false }: SettingsNavItemP
     <Link
       href={href}
       className={`flex items-center justify-between px-3 py-2 rounded-md transition-all ${
-        active ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+        active
+          ? "bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-fg))]"
+          : "text-muted-foreground hover:bg-[hsl(var(--sidebar-hover-bg))] hover:text-foreground"
       }`}
     >
       <div className="flex items-center gap-2.5">
-        <span className={active ? "text-foreground" : "text-muted-foreground"}>{icon}</span>
+        <span className={active ? "text-[hsl(var(--sidebar-active-fg))]" : "text-muted-foreground"}>{icon}</span>
         <span className="text-sm">{label}</span>
       </div>
-      {active && <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+      {active && <ChevronRight className="w-3.5 h-3.5 text-[hsl(var(--sidebar-active-fg))]" />}
     </Link>
   )
 }
-

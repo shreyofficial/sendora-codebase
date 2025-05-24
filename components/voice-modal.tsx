@@ -179,7 +179,7 @@ export default function VoiceModal({ isOpen, onClose, onSelect, selectedVoice }:
             onClick={handleSave}
             disabled={!selected}
             className={`px-4 py-2 rounded-lg text-sm text-white transition-colors ${
-              selected ? "bg-blue-600 hover:bg-blue-700" : "bg-secondary opacity-50 cursor-not-allowed"
+              selected ? "bg-[#635AFE] hover:bg-[#5048E5]" : "bg-secondary opacity-50 cursor-not-allowed"
             }`}
           >
             Select
@@ -189,4 +189,3 @@ export default function VoiceModal({ isOpen, onClose, onSelect, selectedVoice }:
     </ConfigModal>
   )
 }
-

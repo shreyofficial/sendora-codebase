@@ -49,4 +49,3 @@ export default function ConfigModal({ isOpen, onClose, title, children, classNam
     </div>
   )
 }
-

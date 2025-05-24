@@ -1,0 +1,280 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "./animations.css";
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.93rem; /* Reduced from default 1rem (16px) to about 15px */
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInUp {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Theme-aware card styles */
+  .theme-card {
+    @apply bg-card border border-border rounded-xl shadow-sm;
+  }
+
+  .theme-card-hover {
+    @apply transition-all duration-200 hover:shadow-md;
+  }
+
+  /* Theme-aware button styles */
+  .theme-button {
+    @apply rounded-lg font-medium transition-all duration-200;
+  }
+
+  .theme-button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .theme-button-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .theme-button-accent {
+    background-color: hsl(var(--apple-blue));
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+
+  .theme-button-accent:hover {
+    background-color: hsl(var(--apple-blue) / 0.9);
+  }
+
+  /* Theme-aware input styles */
+  .theme-input {
+    @apply bg-background border border-input rounded-lg py-2 px-3 text-foreground focus:outline-none focus:ring-1 focus:ring-ring;
+  }
+
+  /* Theme-aware table styles */
+  .theme-table-header {
+    @apply bg-muted border-b border-border;
+  }
+
+  .theme-table-row {
+    @apply border-b border-border hover:bg-muted/50 transition-colors;
+  }
+
+  /* Theme-aware modal styles */
+  .theme-modal-overlay {
+    @apply bg-black/50 dark:bg-black/70 backdrop-blur-sm;
+  }
+
+  .theme-modal-content {
+    @apply bg-card border border-border rounded-xl shadow-lg;
+  }
+}
+
+/* Apple-inspired card styles */
+.apple-card {
+  @apply bg-card border border-border rounded-xl shadow-sm;
+}
+
+.apple-card-hover {
+  @apply transition-all duration-200 hover:shadow-md;
+}
+
+/* Apple-inspired button styles */
+.apple-button {
+  @apply rounded-lg font-medium transition-all duration-200;
+}
+
+.apple-button-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.apple-button-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+.apple-button-accent {
+  background-color: hsl(var(--apple-blue));
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition-property: all;
+  transition-duration: 200ms;
+}
+
+.apple-button-accent:hover {
+  background-color: hsl(var(--apple-blue) / 0.9);
+}
+
+/* Adjust spacing for common components */
+.p-6 {
+  padding: 1.4rem; /* Slightly reduced from 1.5rem */
+}
+
+.gap-4 {
+  gap: 0.95rem; /* Slightly reduced from 1rem */
+}
+
+/* Adjust text sizes */
+.text-2xl {
+  font-size: 1.4rem; /* Reduced from 1.5rem */
+}
+
+.text-xl {
+  font-size: 1.15rem; /* Reduced from 1.25rem */
+}
+
+.text-lg {
+  font-size: 1.05rem; /* Reduced from 1.125rem */
+}
+
+/* Adjust icon sizes */
+.w-10,
+.h-10 {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.w-8,
+.h-8 {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+
+.w-6,
+.h-6 {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.w-5,
+.h-5 {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.w-4,
+.h-4 {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+/* Custom scrollbar for the area code list */
+.max-h-48::-webkit-scrollbar {
+  width: 6px;
+}
+
+.max-h-48::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.max-h-48::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.max-h-48::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Light mode scrollbar */
+.light .max-h-48::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.light .max-h-48::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.light .max-h-48::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+

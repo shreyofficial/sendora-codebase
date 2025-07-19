@@ -1,16 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
 
-const inter = Inter({ subsets: ["latin"] })
+const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "AI Page Manager - Create & Manage AI-Generated Content",
-  description:
-    "A sophisticated web application for managing custom AI-generated pages with an intuitive admin panel interface.",
+  title: "Just One More Step",
+  description: "Complete your journey with us",
     generator: 'v0.dev'
 }
 
@@ -20,13 +17,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-          <Toaster />
-        </ThemeProvider>
-      </body>
+    <html lang="en">
+      <body className={plusJakartaSans.className}>{children}</body>
     </html>
   )
 }

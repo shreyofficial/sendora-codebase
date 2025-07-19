@@ -1,254 +1,272 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import type React from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { PageCreationForm } from "@/components/page-creation-form"
-import { PageCard } from "@/components/page-card"
-import { PageFilters } from "@/components/page-filters"
-import { PageEditor } from "@/components/page-editor" // Import PageEditor
-import { usePages } from "@/hooks/use-pages"
-import type { Page, ViewMode } from "@/types"
-import { FileText, Plus, Sparkles, Zap, Loader2 } from "lucide-react" // Removed RefreshCw, Bell, Settings
-import { useToast } from "@/hooks/use-toast"
-import { useRouter } from "next/navigation" // Import useRouter
-import { RefreshCw } from "lucide-react" // Declare RefreshCw
+import { Label } from "@/components/ui/label"
 
-export default function Dashboard() {
-  const { pages, loading, error, loadPages, createPage, updatePage, searchPages } = usePages()
+interface FormData {
+  name: string
+  email: string
+  phone: string
+  website: string
+}
 
-  const [editingPage, setEditingPage] = useState<Page | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [viewMode, setViewMode] = useState<ViewMode>("list") // Force list view
-  // Removed sortBy and statusFilter states
-  const [searchResults, setSearchResults] = useState<Page[]>([])
-  const [isSearching, setIsSearching] = useState(false)
+interface FormErrors {
+  name?: string
+  email?: string
+  phone?: string
+  website?: string
+  submit?: string
+}
 
-  const { toast } = useToast()
-  const router = useRouter() // Initialize useRouter
+export default function SignupPage() {
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    phone: "",
+    website: "",
+  })
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Handle search
-  useEffect(() => {
-    const handleSearch = async () => {
-      if (searchQuery.trim()) {
-        setIsSearching(true)
-        const results = await searchPages(searchQuery)
-        setSearchResults(results)
-        setIsSearching(false)
-      } else {
-        setSearchResults([])
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {}
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required"
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required"
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address"
+    }
+
+    // Phone validation (basic)
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required"
+    }
+
+    // Website validation (optional but if provided, should be valid)
+    if (formData.website.trim()) {
+      const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
+      if (!urlRegex.test(formData.website)) {
+        newErrors.website = "Please enter a valid website URL"
       }
     }
 
-    const debounceTimer = setTimeout(handleSearch, 300)
-    return () => clearTimeout(debounceTimer)
-  }, [searchQuery, searchPages]) // Added searchPages to dependency array
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.metaKey) {
-        switch (e.key) {
-          case "n":
-            e.preventDefault()
-            document.querySelector("textarea")?.focus()
-            break
-          case "k":
-            e.preventDefault()
-            document.querySelector('input[placeholder*="Search"]')?.focus()
-            break
-          // Removed Ctrl+R for refresh
-        }
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!validateForm()) {
+      return
+    }
+
+    setIsSubmitting(true)
+    setErrors({})
+
+    try {
+      // Prepare data for webhook
+      const webhookData = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        website: formData.website.trim() || null,
+        timestamp: new Date().toISOString(),
+        source: "signup-form",
       }
-      if (e.key === "Escape" && editingPage) {
-        setEditingPage(null)
+
+      // Send to n8n webhook
+      const response = await fetch("https://n8n.closi.tech/webhook/7e6b0908-6d19-4722-a652-90ebce4ee28d", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(webhookData),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
+
+      // Success - redirect to Notion page in new tab
+      window.open(
+        "https://sendora.notion.site/30-AI-Agents-Guide-2215596e4f9580f6bc10fef7d97e7aca?source=copy_link",
+        "_blank",
+      )
+    } catch (error) {
+      console.error("Submission error:", error)
+      setErrors({
+        submit: "Something went wrong. Please try again.",
+      })
+    } finally {
+      setIsSubmitting(false)
     }
-
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [editingPage]) // Removed loadPages from dependency array
-
-  // Filter and sort pages - Simplified
-  const filteredAndSortedPages = useMemo(() => {
-    const pagesToFilter = searchQuery.trim() ? searchResults : pages
-
-    // No status or sort filtering
-    return pagesToFilter
-  }, [pages, searchResults, searchQuery])
-
-  const handleCreatePage = async (prompt: string) => {
-    const newPage = await createPage(prompt)
-    if (newPage) {
-      toast({ title: "✨ Success", description: "Your AI page has been created!" })
-    } else {
-      toast({ title: "❌ Error", description: "Failed to create page. Please try again." })
-    }
-  }
-
-  const handleEditPage = (page: Page) => {
-    setEditingPage(page)
-  }
-
-  const handleSavePage = async (updatedPage: Page) => {
-    const success = await updatePage(updatedPage)
-    if (success) {
-      setEditingPage(null)
-      toast({ title: "💾 Saved", description: "Page updated successfully!" })
-    } else {
-      toast({ title: "❌ Error", description: "Failed to save page. Please try again." })
-    }
-  }
-
-  // Handle view page navigation
-  const handleViewPage = (page: Page) => {
-    router.push(`https://offer.sendora.ai/pages/${page.slug}`)
-  }
-
-  // Removed handleDuplicatePage, handleDeletePage, handleSelectPage, handleBulkDelete, handleBulkStatusChange
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Loading your pages...</h2>
-          <p className="text-slate-600 dark:text-slate-400">Connecting to database</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">⚠️</span>
-          </div>
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Connection Error</h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-4">{error}</p>
-          <Button onClick={loadPages} className="bg-blue-600 hover:bg-blue-700">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Try Again
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
-  if (editingPage) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <PageEditor page={editingPage} onSave={handleSavePage} onCancel={() => setEditingPage(null)} />
-        </div>
-      </div>
-    )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-      {/* Top Navigation - Simplified */}
-      <div className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-700/60">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold bg-clip-text text-slate-900 dark:text-white">AI Page Manager</h1>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              {/* Removed RefreshCw, Bell, Settings buttons */}
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        {/* Hero Section */}
-        <div className="text-center py-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-6">
-            <Zap className="w-4 h-4" />
-            Database-Powered AI Content
-          </div>
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Create Amazing Content with AI</h2>
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Transform your ideas into compelling pages using advanced AI technology. All data is securely stored in your
-            Supabase database.
-          </p>
-        </div>
+      {/* Main content */}
+      <div className="relative z-10 w-full max-w-lg">
+        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 shadow-2xl">
+          <CardContent className="p-8 space-y-8">
+            {/* Header section */}
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6">
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
 
-        {/* Page Creation - Prominent */}
-        <div className="max-w-3xl mx-auto">
-          <PageCreationForm onCreatePage={handleCreatePage} />
-        </div>
+              <h1 className="text-3xl font-bold text-white tracking-tight">Just One More Step</h1>
 
-        {/* Content Section */}
-        <div className="space-y-6">
-          {/* Section Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Your Pages</h3>
-              <p className="text-slate-600 dark:text-slate-400">
-                Manage and organize your AI-generated content
-                {isSearching && <span className="ml-2 text-blue-600">Searching...</span>}
+              <p className="text-slate-300 text-lg leading-relaxed">
+                You're moments away from accessing the ultimate AI Agents Guide. Join thousands of innovators who are
+                already transforming their workflows.
               </p>
             </div>
-          </div>
 
-          {/* Filters - Simplified */}
-          <PageFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            // Removed viewMode, onViewModeChange, sortBy, onSortChange, statusFilter, onStatusFilterChange, selectedCount, onBulkDelete, onBulkStatusChange
-          />
-
-          {/* Pages List (forced) */}
-          <div className="space-y-4">
-            {filteredAndSortedPages.length === 0 ? (
-              <Card className="col-span-full border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
-                <CardContent className="flex flex-col items-center justify-center py-16">
-                  <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-2xl flex items-center justify-center mb-6">
-                    <FileText className="w-8 h-8 text-blue-400" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-slate-900 dark:text-white">
-                    {searchQuery ? "No pages match your search" : "Ready to create your first page?"}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-center mb-6 max-w-md">
-                    {searchQuery
-                      ? "Try adjusting your search terms to find what you're looking for."
-                      : "Get started by describing what kind of content you'd like to create. Our AI will handle the rest!"}
-                  </p>
-                  {!searchQuery && (
-                    <Button
-                      onClick={() => document.querySelector("textarea")?.focus()}
-                      className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Create Your First Page
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ) : (
-              filteredAndSortedPages.map((page) => (
-                <PageCard
-                  key={page.id}
-                  page={page}
-                  viewMode={viewMode} // Still pass viewMode, but it's always 'list'
-                  onEdit={handleEditPage}
-                  onView={handleViewPage} // Pass the new handleViewPage
+            {/* Form section */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Name Field */}
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium text-slate-200">
+                  Full Name *
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  className={`bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base ${
+                    errors.name ? "border-red-500 focus:border-red-500" : ""
+                  }`}
                 />
-              ))
-            )}
-          </div>
-        </div>
+                {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
+              </div>
+
+              {/* Email Field */}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-slate-200">
+                  Email Address *
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  className={`bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base ${
+                    errors.email ? "border-red-500 focus:border-red-500" : ""
+                  }`}
+                />
+                {errors.email && <p className="text-red-400 text-sm">{errors.email}</p>}
+              </div>
+
+              {/* Phone Field */}
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-sm font-medium text-slate-200">
+                  Phone Number *
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  className={`bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base ${
+                    errors.phone ? "border-red-500 focus:border-red-500" : ""
+                  }`}
+                />
+                {errors.phone && <p className="text-red-400 text-sm">{errors.phone}</p>}
+              </div>
+
+              {/* Website Field */}
+              <div className="space-y-2">
+                <Label htmlFor="website" className="text-sm font-medium text-slate-200">
+                  Website URL <span className="text-slate-400">(Optional)</span>
+                </Label>
+                <Input
+                  id="website"
+                  type="url"
+                  placeholder="https://yourwebsite.com"
+                  value={formData.website}
+                  onChange={(e) => handleInputChange("website", e.target.value)}
+                  className={`bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base ${
+                    errors.website ? "border-red-500 focus:border-red-500" : ""
+                  }`}
+                />
+                {errors.website && <p className="text-red-400 text-sm">{errors.website}</p>}
+              </div>
+
+              {/* Submit Error */}
+              {errors.submit && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                  <p className="text-red-400 text-sm">{errors.submit}</p>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold text-base transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span>Submitting...</span>
+                  </div>
+                ) : (
+                  "Get Your AI Agents Guide"
+                )}
+              </Button>
+            </form>
+
+            {/* Footer */}
+            <div className="text-center">
+              <p className="text-xs text-slate-400">
+                By submitting, you agree to receive the AI Agents Guide and occasional updates from Sendora AI. We
+                respect your privacy and won't spam you.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Floating elements */}
+        <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500/20 rounded-full animate-pulse"></div>
+        <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-purple-500/20 rounded-full animate-pulse delay-1000"></div>
       </div>
     </div>
   )
